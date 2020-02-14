@@ -4,30 +4,30 @@ import sys
 import os
 
 
-def getPcName(pc):
+def get_pc_name(pc):
     command = f"nslookup {pc}"
-    pcName = subprocess.Popen(command, stdout=subprocess.PIPE)
+    pc_name = subprocess.Popen(command, stdout=subprocess.PIPE)
 
-    pcName = str(pcName.communicate()[0])
-    pcName = pcName.split()[3]
-    pcName = pcName.split(".")[0]
-    pcName = pcName.upper()
+    pc_name = str(pc_name.communicate()[0])
+    pc_name = pc_name.split()[3]
+    pc_name = pc_name.split(".")[0]
+    pc_name = pc_name.upper()
 
-    return pcName
+    return pc_name
 
 
-def getWCitrix(pc):
+def get_citrix_number(pc):
     command = fr'REG QUERY "\\{pc}\HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\ICA Client" /v ClientName'
-    citrixNumber = subprocess.Popen(command, stdout=subprocess.PIPE)
+    citrix_number = subprocess.Popen(command, stdout=subprocess.PIPE)
 
-    citrixNumber = str(citrixNumber.communicate()[0])
-    citrixNumber = citrixNumber.split()[-1]
-    citrixNumber = citrixNumber.replace("\\r\\n\\r\\n'", "")
+    citrix_number = str(citrix_number.communicate()[0])
+    citrix_number = citrix_number.split()[-1]
+    citrix_number = citrix_number.replace("\\r\\n\\r\\n'", "")
 
-    return citrixNumber
+    return citrix_number
 
 
-def getPrograms(pc):
+def get_programs(pc):
     command = f"wmic /node:{pc} product get name, version"
     programs = subprocess.Popen(command, stdout=subprocess.PIPE)
 
@@ -40,7 +40,7 @@ def getPrograms(pc):
     return sorted(programs)
 
 
-def getPrinters(pc):
+def get_printers(pc):
     command = f"wmic /node:{pc} printer get name, portname"
     printers = subprocess.Popen(command, stdout=subprocess.PIPE)
 
@@ -53,23 +53,23 @@ def getPrinters(pc):
     return printers
 
 
-def getZzzPrograms(oldPc, newPc):
-    zzzPrograms = []
-    oldZzzPrograms = os.listdir(rf"\\{oldPc}\c$\Masters\SRC")
-    newZzzPrograms = os.listdir(rf"\\{newPc}\c$\Masters\SRC")
+def get_zzz_programs(oldPc, newPc):
+    zzz_programs = []
+    old_zzz_programs = os.listdir(rf"\\{oldPc}\c$\Masters\SRC")
+    new_zzz_programs = os.listdir(rf"\\{newPc}\c$\Masters\SRC")
 
-    for program in oldZzzPrograms:
-        if program not in newZzzPrograms:
-            zzzPrograms.append(program)
+    for program in old_zzz_programs:
+        if program not in new_zzz_programs:
+            zzz_programs.append(program)
 
-    return zzzPrograms
+    return zzz_programs
 
 
-def writeToFile(
-    pcName, oldWNumber, oldPrograms, newPrograms, zzzPrograms, printers, newIp
+def write_to_file(
+    pc_name, old_w_number, old_programs, new_programs, zzz_programs, printers, new_ip
 ):
-    missingPrograms = []
-    miscPrograms = [
+    missing_programs = []
+    misc_programs = [
         "Intel(R)",
         "Microsoft VC++",
         "Microsoft Visual C++",
@@ -78,14 +78,14 @@ def writeToFile(
         "AgentInstall",
         "Local Administrator",
     ]
-    for program in oldPrograms:
-        if program not in newPrograms:
-            missingPrograms.append(program)
+    for program in old_programs:
+        if program not in new_programs:
+            missing_programs.append(program)
 
-    for program in missingPrograms:
-        for misc in miscPrograms:
+    for program in missing_programs:
+        for misc in misc_programs:
             if misc in program:
-                missingPrograms.remove(program)
+                missing_programs.remove(program)
 
     try:
         os.mkdir(rf"C:\source\pcswaps")
@@ -93,16 +93,16 @@ def writeToFile(
         pass
 
     os.chdir(rf"C:\source\pcswaps")
-    file = open(f"{pcName}.txt", "w+")
+    file = open(f"{pc_name}.txt", "w+")
 
-    file.write(f"Name: {pcName} | W#: {oldWNumber}\n")
+    file.write(f"Name: {pc_name} | W#: {old_w_number}\n")
 
     file.write("Missing Programs:\n")
-    for program in missingPrograms:
+    for program in missing_programs:
         file.write(f"{program}\n")
 
     file.write("\nzzzPrograms:\n")
-    for program in zzzPrograms:
+    for program in zzz_programs:
         file.write(f"{program}\n")
 
     file.write("\nPrinters:\n")
@@ -110,27 +110,27 @@ def writeToFile(
         file.write(f"{printer}\n")
 
     file.write("\nOld Programs:\n")
-    for program in oldPrograms:
+    for program in old_programs:
         file.write(f"{program}\n")
 
     file.close()
 
     try:
-        os.mkdir(rf"\\{newIp}\c$\source")
+        os.mkdir(rf"\\{new_ip}\c$\source")
     except:
         pass
 
-    os.chdir(rf"\\{newIp}\c$\source")
-    file = open(f"{pcName}.txt", "w+")
+    os.chdir(rf"\\{new_ip}\c$\source")
+    file = open(f"{pc_name}.txt", "w+")
 
-    file.write(f"Name: {pcName} | W#: {oldWNumber}\n")
+    file.write(f"Name: {pc_name} | W#: {old_w_number}\n")
 
     file.write("Missing Programs:\n")
-    for program in missingPrograms:
+    for program in missing_programs:
         file.write(f"{program}\n")
 
     file.write("\nzzzPrograms:\n")
-    for program in zzzPrograms:
+    for program in zzz_programs:
         file.write(f"{program}\n")
 
     file.write("\nPrinters:\n")
@@ -138,22 +138,22 @@ def writeToFile(
         file.write(f"{printer}\n")
 
     file.write("\nOld Programs:\n")
-    for program in oldPrograms:
+    for program in old_programs:
         file.write(f"{program}\n")
 
     file.close()
 
 
-oldPc = sys.argv[1]
-newPc = sys.argv[2]
-oldPcName = getPcName(oldPc)
-oldWNumber = getWCitrix(oldPc)
-oldPcPrograms = getPrograms(oldPc)
-newPcPrograms = getPrograms(newPc)
-zzzPrograms = getZzzPrograms(oldPc, newPc)
-printers = getPrinters(oldPc)
+old_pc = sys.argv[1]
+new_pc = sys.argv[2]
+old_pc_name = get_pc_name(old_pc)
+old_w_number = get_citrix_number(old_pc)
+old_pc_programs = get_programs(old_pc)
+new_pc_programs = get_programs(new_pc)
+zzz_programs = get_zzz_programs(old_pc, new_pc)
+printers = get_printers(old_pc)
 
-writeToFile(
-    oldPcName, oldWNumber, oldPcPrograms, newPcPrograms, zzzPrograms, printers, newPc
+write_to_file(
+    old_pc_name, old_w_number, old_pc_programs, new_pc_programs, zzz_programs, printers, new_pc
 )
 

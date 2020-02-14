@@ -37,8 +37,8 @@ def write_to_excel(ip_addresses):
     ws.append(headers)
 
     for ip_address in ip_addresses:
-        pcInfo = Computer(ip_address)
-        write_to_row = pcInfo.all_info
+        pc_info = Computer(ip_address)
+        write_to_row = pc_info.all_info
         ws.append(write_to_row)
 
     wb.save("pcInventory.xlsx")
