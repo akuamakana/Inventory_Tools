@@ -39,7 +39,7 @@ class Computer:
             return "Floor 3"
         elif floor == "74":
             return "Floor 4"
-        elif floor == "90":
+        elif floor == "90" or floor == "92":
             return "Wireless"
         else:
             return "Unknown"
@@ -47,7 +47,6 @@ class Computer:
     def get_citrix_number(self, ip_address):
         command = fr'REG QUERY "\\{ip_address}\HKEY_LOCAL_MACHINE\SOFTWARE\Citrix\ICA Client" /v ClientName'
         citrix_number = subprocess.Popen(command, stdout=subprocess.PIPE)
-
         citrix_number = str(citrix_number.communicate()[0])
         citrix_number = citrix_number.split()[-1]
         citrix_number = citrix_number.replace("\\r\\n\\r\\n'", "")
@@ -59,7 +58,6 @@ class Computer:
     def get_serial_number(self, ip_address):
         command = f"wmic /node:{ip_address} BIOS GET SERIALNUMBER"
         serial_number = subprocess.Popen(command, stdout=subprocess.PIPE)
-
         serial_number = str(serial_number.communicate()[0])
         if "Access is denied." in serial_number:
             return "\n"
@@ -73,7 +71,6 @@ class Computer:
     def get_pc_name(self, ip_address):
         command = f"nslookup {ip_address}"
         name = subprocess.Popen(command, stdout=subprocess.PIPE)
-
         name = str(name.communicate())
         name = name.replace(r"""\r\n""", "")
         name = name.split()
@@ -86,7 +83,6 @@ class Computer:
     def get_operating_system(self, ip_address):
         command = f"wmic /node:{ip_address} os get Caption"
         operating_system = subprocess.Popen(command, stdout=subprocess.PIPE)
-
         operating_system = str(operating_system.communicate()[0])
         if "Access is denied." in operating_system:
             return "\n"
@@ -100,7 +96,6 @@ class Computer:
     def get_model(self, ip_address):
         command = f"wmic /node:{ip_address} computersystem get model"
         model = subprocess.Popen(command, stdout=subprocess.PIPE)
-
         model = str(model.communicate()[0])
         model = model.split()[1:]
         model = [word.replace("\\r", "") for word in model]
@@ -112,7 +107,6 @@ class Computer:
     def get_logged_on_user(self, ip_address):
         command = f"wmic /node:{ip_address} computersystem get username"
         user = subprocess.Popen(command, stdout=subprocess.PIPE)
-
         user = str(user.communicate()[0]).split()
         if len(user) < 3:
             return "\n"
@@ -124,11 +118,16 @@ class Computer:
 
     def get_username(self, logged_on_user):
         try:
-            q = adquery.ADQuery()
-            q.execute_query(
+            username = adquery.ADQuery()
+            username.execute_query(
                 attributes=["cn"], where_clause=f"SamAccountName = '{logged_on_user}'"
             )
-            return q.get_single_result()["cn"]
+            username = username.get_single_result()["cn"]
+            username = username.replace(" ", "")
+            username = username.split(",")
+            username = username[::-1]
+            username = " ".join(username)
+            return username
         except:
             return logged_on_user
 

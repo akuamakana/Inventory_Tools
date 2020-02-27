@@ -14,46 +14,46 @@ cd /d C:\
 
 :OldPC
 
-set /p t=Enter OLD Machine Name: 
+set /p old_pc=Enter OLD Machine Name: 
 
-if %t%=="restart" goto Begin
+if %old_pc%=="restart" goto Begin
 
-if not exist \\%t%\c$ ECHO Old PC Not Found.
+if not exist \\%old_pc%\c$ ECHO Old PC Not Found.
 
-if not exist \\%t%\c$ goto OldPC
+if not exist \\%old_pc%\c$ goto OldPC
 
 :NewPC
 
-set /p z=Enter NEW Machine Name: 
+set /p new_pc=Enter NEW Machine Name: 
 
-if %z%=="restart" goto Begin
+if %new_pc%=="restart" goto Begin
 
-if not exist \\%z%\c$ ECHO New PC Not Found.
+if not exist \\%new_pc%\c$ ECHO New PC Not Found.
 
-if not exist \\%z%\c$ goto NewPC
+if not exist \\%new_pc%\c$ goto NewPC
 
-saveInfo.py %t% %z%
+saveInfo.py %old_pc% %new_pc%
 
 :start
 
 ECHO.
 ECHO Logged on user: 
 ECHO.
-wmic /node:%t% computersystem get username
+wmic /node:%old_pc% computersystem get username
 ECHO.
 ECHO Printers on OLD machine:
 ECHO.
-wmic /node:%t% printer get name, portname
+wmic /node:%old_pc% printer get name, portname
 ECHO.
 ECHO Users on OLD machine:
 ECHO.
-DIR /O:-D /T:A /B "\\%t%\c$\Users\"
+DIR /O:-D /T:A /B "\\%old_pc%\c$\Users\"
 ECHO.
 
-set /p r=Enter Username: 
-if %r%=="restart" goto Begin
+set /p username=Enter Username: 
+if %username%=="restart" goto Begin
 
-for /f "delims= " %%a in ('"wmic path win32_useraccount where name='%r%' get sid"') do (
+for /f "delims= " %%a in ('"wmic path win32_useraccount where name='%username%' get sid"') do (
    if not "%%a"=="SID" (          
       set myvar=%%a
       goto :loop_end
@@ -64,82 +64,82 @@ for /f "delims= " %%a in ('"wmic path win32_useraccount where name='%r%' get sid
 
 REM if exist "https://protect-us.mimecast.com/s/pfqYCwp5G6HjvL63hq1G-h?domain=\\cs.msds.kp.org\scal\rvs\share27\itfs\_refresh\refresh Pairing\ProfileCopier.csv" pushd "https://protect-us.mimecast.com/s/pfqYCwp5G6HjvL63hq1G-h?domain=\\cs.msds.kp.org\scal\rvs\share27\itfs\_refresh\refresh Pairing"
 
-REM ECHO %t%,%z%,%r%,%date%,%time% >> ProfileCopier.csv
+REM ECHO %old_pc%,%new_pc%,%username%,%date%,%time% >> ProfileCopier.csv
 
 cd /d C:\
 
-mkdir "\\%z%\c$\source\profile\%r%"
+mkdir "\\%new_pc%\c$\source\profile\%username%"
 
-mkdir "\\%z%\c$\source\profile\%r%\desktop"
+mkdir "\\%new_pc%\c$\source\profile\%username%\desktop"
 
-mkdir "\\%z%\c$\source\profile\%r%\Documents"
+mkdir "\\%new_pc%\c$\source\profile\%username%\Documents"
 
-mkdir "\\%z%\c$\source\profile\%r%\Pictures"
+mkdir "\\%new_pc%\c$\source\profile\%username%\Pictures"
 
 :Win7
 
 ECHO Copying, please wait...
 
-XCOPY /E /C /R /I /K /Y /Q "C:\source\citrixSwap" "\\%z%\c$\source\citrixSwap"
+XCOPY /E /C /R /I /K /Y /Q "C:\source\citrixSwap" "\\%new_pc%\c$\source\citrixSwap"
 
-XCOPY /E /C /R /I /K /Y /Q "\\%t%\c$\Users\%r%\Desktop" "\\%z%\c$\source\profile\%r%\desktop"
+XCOPY /E /C /R /I /K /Y /Q "\\%old_pc%\c$\Users\%username%\Desktop" "\\%new_pc%\c$\source\profile\%username%\desktop"
 
-XCOPY /E /C /R /I /K /Y /Q "\\%t%\c$\Users\%r%\Favorites" "\\%z%\c$\source\profile\%r%\favorites"
+XCOPY /E /C /R /I /K /Y /Q "\\%old_pc%\c$\Users\%username%\Favorites" "\\%new_pc%\c$\source\profile\%username%\favorites"
 
-XCOPY /E /C /R /I /K /Y /Q "\\%t%\c$\Users\%r%\Documents" "\\%z%\c$\source\profile\%r%\Documents"
+XCOPY /E /C /R /I /K /Y /Q "\\%old_pc%\c$\Users\%username%\Documents" "\\%new_pc%\c$\source\profile\%username%\Documents"
 
-echo F|XCOPY /E /C /R /I /K /Y /Q "\\%t%\c$\Users\%r%\AppData\Local\Google\Chrome\User Data\Default\Bookmarks" "\\%z%\c$\source\profile\%r%"
+echo F|XCOPY /E /C /R /I /K /Y /Q "\\%old_pc%\c$\Users\%username%\AppData\Local\Google\Chrome\User Data\Default\Bookmarks" "\\%new_pc%\c$\source\profile\%username%"
 
-XCOPY /E /C /R /I /K /Y /Q "\\%t%\c$\Users\%r%\AppData\Roaming\Microsoft\Signatures" "\\%z%\c$\source\profile\%r%\Signatures"
+XCOPY /E /C /R /I /K /Y /Q "\\%old_pc%\c$\Users\%username%\AppData\Roaming\Microsoft\Signatures" "\\%new_pc%\c$\source\profile\%username%\Signatures"
 
-XCOPY /E /C /R /I /K /Y /Q "\\%t%\c$\Users\%r%\Pictures" "\\%z%\c$\source\profile\%r%\Pictures"
+XCOPY /E /C /R /I /K /Y /Q "\\%old_pc%\c$\Users\%username%\Pictures" "\\%new_pc%\c$\source\profile\%username%\Pictures"
 
-if exist "\\%z%\C$\source\profile\%r%\Network.reg" del "\\%z%\C$\source\profile\%r%\Network.reg"
+if exist "\\%new_pc%\C$\source\profile\%username%\Network.reg" del "\\%new_pc%\C$\source\profile\%username%\Network.reg"
 
-if exist "\\%z%\C$\source\profile\%r%\Printers.reg" del "\\%z%\C$\source\profile\%r%\Printers.reg"
+if exist "\\%new_pc%\C$\source\profile\%username%\Printers.reg" del "\\%new_pc%\C$\source\profile\%username%\Printers.reg"
 
-REM wmic /node:%t% process call create "reg export \"HKEY_USERS\%myvar%\Network" "\\%z%\c$\source\profile\%r%\Network.reg" /y
+REM wmic /node:%old_pc% process call create "reg export \"HKEY_USERS\%myvar%\Network" "\\%new_pc%\c$\source\profile\%username%\Network.reg" /y
 
-REM wmic /node:%t% process call create "reg export \"HKEY_USERS\%myvar%\Printers\Connections\" "\\%z%\c$\source\profile\%r%\Printers.reg" /y
+REM wmic /node:%old_pc% process call create "reg export \"HKEY_USERS\%myvar%\Printers\Connections\" "\\%new_pc%\c$\source\profile\%username%\Printers.reg" /y
 
 goto Output
 
 :Output
 
-pushd \\%z%\c$\
+pushd \\%new_pc%\c$\
 
 md Temp
 
-pushd \\%z%\c$\Source\
+pushd \\%new_pc%\c$\Source\
 
 md Profile
-pushd "\\%z%\c$\Source\Profile"
-ECHO CD C:\ > %r%.bat
-ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%r%\Desktop" "C:\Users\%r%\Desktop" >> %r%.bat
-ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%r%\Favorites" "C:\Users\%r%\Favorites" >> %r%.bat
-ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%r%\Documents" "C:\Users\%r%\Documents" >> %r%.bat
-ECHO echo F|XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%r%\Bookmarks" "C:\Users\%r%\AppData\Local\Google\Chrome\User Data\Default" >> %r%.bat
-ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%r%\Signatures" "C:\Users\%r%\AppData\Roaming\Microsoft\Signatures" >> %r%.bat
-ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%r%\Pictures" "C:\Users\%r%\Pictures" >> %r%.bat
-ECHO taskkill /f /IM explorer.exe >> %r%.bat
-ECHO start explorer.exe >> %r%.bat
-ECHO start /b ^"^" cmd /c del ^"%%~f0^"^&exit /b >> %r%.bat
+pushd "\\%new_pc%\c$\Source\Profile"
+ECHO CD C:\ > %username%.bat
+ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%username%\Desktop" "C:\Users\%username%\Desktop" >> %username%.bat
+ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%username%\Favorites" "C:\Users\%username%\Favorites" >> %username%.bat
+ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%username%\Documents" "C:\Users\%username%\Documents" >> %username%.bat
+ECHO echo F|XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%username%\Bookmarks" "C:\Users\%username%\AppData\Local\Google\Chrome\User Data\Default" >> %username%.bat
+ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%username%\Signatures" "C:\Users\%username%\AppData\Roaming\Microsoft\Signatures" >> %username%.bat
+ECHO XCOPY /E /C /R /I /K /Y /Q "C:\Source\Profile\%username%\Pictures" "C:\Users\%username%\Pictures" >> %username%.bat
+ECHO taskkill /f /IM explorer.exe >> %username%.bat
+ECHO start explorer.exe >> %username%.bat
+ECHO start /b ^"^" cmd /c del ^"%%~f0^"^&exit /b >> %username%.bat
 
-pushd "\\%z%\c$\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
+pushd "\\%new_pc%\c$\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
 
-ECHO @ECHO off > %r%.bat
-ECHO if not exist C:\Users\%r% exit >> %r%.bat
-ECHO if not exist "C:\source\profile\%r%.bat" exit >> %r%.bat
-ECHO cd /d C:\ >> %r%.bat
-ECHO ECHO Copying, please wait... >> %r%.bat
-ECHO if exist "C:\source\profile\%r%\Network.reg" regedit /S "C:\source\profile\%r%\Network.reg" >> %r%.bat
-ECHO if exist "C:\source\profile\%r%\Printers.reg" regedit /S "C:\source\profile\%r%\Printers.reg" >> %r%.bat
-ECHO if exist "C:\source\profile\%r%.bat" "C:\source\profile\%r%.bat" >> %r%.bat
-REM ECHO DEL /F/Q/S "C:\Source\Profile\%r%\desktop.ini" >> %r%.bat
-ECHO ECHO. >> %r%.bat
-ECHO ECHO Migration Complete >> %r%.bat
-ECHO ECHO. >> %r%.bat
-ECHO exit >> %r%.bat
+ECHO @ECHO off > %username%.bat
+ECHO if not exist C:\Users\%username% exit >> %username%.bat
+ECHO if not exist "C:\source\profile\%username%.bat" exit >> %username%.bat
+ECHO cd /d C:\ >> %username%.bat
+ECHO ECHO Copying, please wait... >> %username%.bat
+ECHO if exist "C:\source\profile\%username%\Network.reg" regedit /S "C:\source\profile\%username%\Network.reg" >> %username%.bat
+ECHO if exist "C:\source\profile\%username%\Printers.reg" regedit /S "C:\source\profile\%username%\Printers.reg" >> %username%.bat
+ECHO if exist "C:\source\profile\%username%.bat" "C:\source\profile\%username%.bat" >> %username%.bat
+REM ECHO DEL /F/Q/S "C:\Source\Profile\%username%\desktop.ini" >> %username%.bat
+ECHO ECHO. >> %username%.bat
+ECHO ECHO Migration Complete >> %username%.bat
+ECHO ECHO. >> %username%.bat
+ECHO exit >> %username%.bat
 
 net use * /d /y
 
