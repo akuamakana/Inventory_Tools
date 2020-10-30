@@ -1,0 +1,73 @@
+DumpEDID v1.07
+Copyright (c) 2006 - 2018 Nir Sofer
+Web site: http://www.nirsoft.net
+
+*****************************************************************
+Active                   : Yes
+Registry Key             : DISPLAY\HWP3279\4&9365187&0&UID224795
+Monitor Name             : HP E232
+Serial Number            : CN46160SD9
+Manufacture Week         : 16 / 2016
+ManufacturerID           : 61474 (0xF022)
+ProductID                : 12921 (0x3279)
+Serial Number (Numeric)  : 0 (0x00000000)
+EDID Version             : 1.4
+Display Gamma            : 2.20
+Vertical Frequency       : 50 - 60 Hz
+Horizontal Frequency     : 30 - 80 KHz
+Maximum Image Size       : 51 X 29 cm (23.1 Inch)
+Maximum Resolution       : 1920 X 1080
+Support Standby Mode     : No
+Support Suspend Mode     : No
+Support Low-Power Mode   : Yes
+Support Default GTF      : No
+Digital                  : Yes
+
+Supported Display Modes  :
+     640 X  480  60 Hz
+     800 X  600  60 Hz
+    1024 X  768  60 Hz
+    1280 X  720  60 Hz
+    1280 X  800  60 Hz
+    1440 X  900  60 Hz
+    1280 X 1024  60 Hz
+    1600 X  900  60 Hz
+    1680 X 1050  60 Hz
+    1920 X 1080  60 Hz
+
+*****************************************************************
+
+*****************************************************************
+Active                   : Yes
+Registry Key             : DISPLAY\HWP327A\4&9365187&0&UID198219
+Monitor Name             : HP E232
+Serial Number            : 3CQ6150R0Q
+Manufacture Week         : 15 / 2016
+ManufacturerID           : 61474 (0xF022)
+ProductID                : 12922 (0x327A)
+Serial Number (Numeric)  : 16843009 (0x01010101)
+EDID Version             : 1.3
+Display Gamma            : 2.20
+Vertical Frequency       : 50 - 60 Hz
+Horizontal Frequency     : 30 - 80 KHz
+Maximum Image Size       : 51 X 29 cm (23.1 Inch)
+Maximum Resolution       : 1920 X 1080
+Support Standby Mode     : No
+Support Suspend Mode     : No
+Support Low-Power Mode   : Yes
+Support Default GTF      : No
+Digital                  : Yes
+
+Supported Display Modes  :
+     640 X  480  60 Hz
+     800 X  600  60 Hz
+    1024 X  768  60 Hz
+    1280 X  720  60 Hz
+    1280 X  800  60 Hz
+    1440 X  900  60 Hz
+    1280 X 1024  60 Hz
+    1600 X  900  60 Hz
+    1680 X 1050  60 Hz
+    1920 X 1080  60 Hz
+
+*****************************************************************

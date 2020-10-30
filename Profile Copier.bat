@@ -32,18 +32,18 @@ if not exist \\%new_pc%\c$ ECHO New PC Not Found.
 
 if not exist \\%new_pc%\c$ goto NewPC
 
-saveInfo.py %old_pc% %new_pc%
+saveInfo.py "%old_pc%" "%new_pc%"
 
 :start
 
 ECHO.
 ECHO Logged on user: 
 ECHO.
-wmic /node:%old_pc% computersystem get username
+wmic /node:"%old_pc%" computersystem get username
 ECHO.
 ECHO Printers on OLD machine:
 ECHO.
-wmic /node:%old_pc% printer get name, portname
+wmic /node:"%old_pc%" printer get name, portname
 ECHO.
 ECHO Users on OLD machine:
 ECHO.

@@ -1,4 +1,5 @@
 import subprocess
+import os
 from pyad import adquery
 
 
@@ -13,6 +14,9 @@ class Computer:
         self.model = self.get_model(self.ip_address)
         self.logged_on_user = self.get_logged_on_user(self.ip_address)
         self.user_ad_name = self.get_username(self.logged_on_user)
+        self.is_installed = self.get_installed_program(
+            self.ip_address, "Computer Panic Button 9.9.9"
+        )
         self.all_info = [
             self.floor,
             self.citrix_number,
@@ -23,6 +27,7 @@ class Computer:
             self.ip_address,
             self.logged_on_user,
             self.user_ad_name,
+            self.is_installed,
         ]
 
     def get_floor(self, ip_address):
@@ -30,8 +35,8 @@ class Computer:
         floor = floor[2]
 
         if floor == "24":
-            return "KMA"
-        elif floor == "68":
+            return "WMC"
+        elif floor == "68" or floor == "66":
             return "Floor 1"
         elif floor == "70" or floor == "94":
             return "Floor 2"
@@ -39,6 +44,8 @@ class Computer:
             return "Floor 3"
         elif floor == "74":
             return "Floor 4"
+        elif floor == "76":
+            return "PT"
         elif floor == "90" or floor == "92":
             return "Wireless"
         else:
@@ -130,4 +137,20 @@ class Computer:
             return username
         except:
             return logged_on_user
+
+    def get_zzz_programs(self, pc):
+        try:
+            zzz_programs = os.listdir(rf"\\{pc}\c$\Masters\SRC")
+
+            return zzz_programs
+        except:
+            return []
+
+    def get_installed_program(self, ip_address, program):
+        all_programs = self.get_zzz_programs(ip_address)
+
+        if len(all_programs) == 0:
+            return "n/a"
+
+        return program in all_programs
 
